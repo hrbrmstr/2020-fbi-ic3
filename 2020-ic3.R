@@ -62,7 +62,7 @@ stri_split_lines(fbi[[16]])[[1]][8:17] |>
   mutate(age_range = factor(age_range, levels = age_range)) -> pg16_victims_by_age_group
 
 gt::gt(pg16_victims_by_age_group)
-
+  
 #' ### page 17 — top 20 international victim countries
 
 stri_split_lines(fbi[[17]])[[1]][33:41] |> 
