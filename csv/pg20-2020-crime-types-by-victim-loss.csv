@@ -1,0 +1,34 @@
+crime_type,loss
+BEC/EAC,1866642107
+Confidence Fraud/Romance,600249821
+Investment,336469000
+Non-Payment/Non-Delivery,265011249
+Identity Theft,219484699
+Spoofing,216513728
+Real Estate/Rental,213196082
+Personal Data Breach,194473055
+Tech Support,146477709
+Credit Card Fraud,129820792
+Corporate Data Breach,128916648
+Government Impersonation,109938030
+Other,101523082
+Advanced Fee,83215405
+Extortion,70935939
+Overpayment,51039922
+Ransomware,29157405
+Health Care Related,29042515
+Civil Matter,24915958
+Misrepresentation,19707242
+Malware/Scareware/Virus,6904054
+Harassment/Threats Violence,6547449
+IPR/Copyright/Counterfeit,5910617
+Charity,4428766
+Gambling,3961508
+Re-shipping,3095265
+Crimes Against Children,660044
+Denial of Service/TDos,512127
+Hacktivist,50
+Terrorism,0
+Employment,62314015
+Lottery/Sweepstakes/Inheritance,61111319
+Phishing/Vishing/Smishing/Pharming,54241075

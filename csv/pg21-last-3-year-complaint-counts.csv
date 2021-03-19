@@ -1,0 +1,97 @@
+crime_type,year,victim_count
+BEC/EAC,2020,19369
+Charity,2020,659
+Civil Matter,2020,968
+Confidence Fraud/Romance,2020,23751
+Corporate Data Breach,2020,2794
+Credit Card Fraud,2020,17614
+Crimes Against Children,2020,3202
+Denial of Service/TDoS,2020,2018
+Employment,2020,16879
+Extortion,2020,76741
+Gambling,2020,391
+Government Impersonation,2020,12827
+Hacktivist,2020,52
+Harassment/Threats of Violence,2020,20604
+Health Care Related,2020,1383
+Identity Theft,2020,43330
+Investment,2020,8788
+IPR/Copyright and Counterfeit,2020,4213
+Lottery/Sweepstakes/Inheritance,2020,8501
+Malware/Scareware/Virus,2020,1423
+Misrepresentation,2020,24276
+Non-Payment/Non-Delivery,2020,108869
+Other,2020,10372
+Overpayment,2020,10988
+Personal Data Breach,2020,45330
+Phishing/Vishing/Smishing/Pharming,2020,241342
+Ransomware,2020,2474
+Real Estate/Rental,2020,13638
+Re-Shipping,2020,883
+Spoofing,2020,28218
+Tech Support,2020,15421
+Terrorism,2020,65
+BEC/EAC,2019,23775
+Charity,2019,407
+Civil Matter,2019,908
+Confidence Fraud/Romance,2019,19473
+Corporate Data Breach,2019,1795
+Credit Card Fraud,2019,14378
+Crimes Against Children,2019,1312
+Denial of Service/TDoS,2019,1353
+Employment,2019,14493
+Extortion,2019,43101
+Gambling,2019,262
+Government Impersonation,2019,13873
+Hacktivist,2019,39
+Harassment/Threats of Violence,2019,15502
+Health Care Related,2019,657
+Identity Theft,2019,16053
+Investment,2019,3999
+IPR/Copyright and Counterfeit,2019,3892
+Lottery/Sweepstakes/Inheritance,2019,7767
+Malware/Scareware/Virus,2019,2373
+Misrepresentation,2019,5975
+Non-Payment/Non-Delivery,2019,61832
+Other,2019,10842
+Overpayment,2019,15395
+Personal Data Breach,2019,38218
+Phishing/Vishing/Smishing/Pharming,2019,114702
+Ransomware,2019,2047
+Real Estate/Rental,2019,11677
+Re-Shipping,2019,929
+Spoofing,2019,25789
+Tech Support,2019,13633
+Terrorism,2019,61
+BEC/EAC,2018,20373
+Charity,2018,493
+Civil Matter,2018,768
+Confidence Fraud/Romance,2018,18493
+Corporate Data Breach,2018,2480
+Credit Card Fraud,2018,15210
+Crimes Against Children,2018,1394
+Denial of Service/TDoS,2018,1799
+Employment,2018,14979
+Extortion,2018,51146
+Gambling,2018,181
+Government Impersonation,2018,10978
+Hacktivist,2018,77
+Harassment/Threats of Violence,2018,18415
+Health Care Related,2018,337
+Identity Theft,2018,16128
+Investment,2018,3693
+IPR/Copyright and Counterfeit,2018,2249
+Lottery/Sweepstakes/Inheritance,2018,7146
+Malware/Scareware/Virus,2018,2811
+Misrepresentation,2018,5959
+Non-Payment/Non-Delivery,2018,65116
+Other,2018,10826
+Overpayment,2018,15512
+Personal Data Breach,2018,50642
+Phishing/Vishing/Smishing/Pharming,2018,26379
+Ransomware,2018,1493
+Real Estate/Rental,2018,11300
+Re-Shipping,2018,907
+Spoofing,2018,15569
+Tech Support,2018,14408
+Terrorism,2018,120
