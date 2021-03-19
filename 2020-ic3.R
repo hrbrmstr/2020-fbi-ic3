@@ -45,29 +45,29 @@ fbi <- pdf_text("src/851104.pdf")
 
 #' ### page 16 — 2020 victims by age group
 
-stri_split_lines(fbi[[16]])[[1]][8:17] |> 
-  stri_trim_both() |> 
-  discard(`==`, "") |> 
-  stri_replace_all_fixed("$", "") |> 
-  stri_split_regex("[[:space:]]{3,}", simplify = TRUE) |>
-  as.data.frame() |> 
-  set_names(c("age_range", "total_count", "total_loss")) |> 
+stri_split_lines(fbi[[16]])[[1]][8:17] %>% 
+  stri_trim_both() %>% 
+  discard(`==`, "") %>% 
+  stri_replace_all_fixed("$", "") %>% 
+  stri_split_regex("[[:space:]]{3,}", simplify = TRUE) %>%
+  as.data.frame() %>% 
+  set_names(c("age_range", "total_count", "total_loss")) %>% 
   type_convert(
     col_types = cols(
       age_range = col_character(),
       total_count = col_number(),
       total_loss = col_number()
     )
-  ) |> 
+  ) %>% 
   mutate(age_range = factor(age_range, levels = age_range)) -> pg16_victims_by_age_group
 
 gt::gt(pg16_victims_by_age_group)
   
 #' ### page 17 — top 20 international victim countries
 
-stri_split_lines(fbi[[17]])[[1]][33:41] |> 
-  stri_trim_both() |> 
-  discard(`==`, "") |> 
+stri_split_lines(fbi[[17]])[[1]][33:41] %>% 
+  stri_trim_both() %>% 
+  discard(`==`, "") %>% 
   stri_match_all_regex(
 "
 ([[:digit:]]{1,2})\\.  # extract the digits from the leading ##.
@@ -76,11 +76,11 @@ stri_split_lines(fbi[[17]])[[1]][33:41] |>
 ([[:digit:],]+)        # the value
 ",
     comment = TRUE
-  ) |> 
+  ) %>% 
   map_df(~{
-    .x[,3:4] |> 
-      as.data.frame() |> 
-      set_names("country", "victim_count") |> 
+    .x[,3:4] %>% 
+      as.data.frame() %>% 
+      set_names("country", "victim_count") %>% 
       type_convert(
         col_types = cols(
           country = col_character(),
@@ -93,9 +93,9 @@ gt::gt(pg17_top_20_victim_countries)
 
 #+ page 19 — 2020 crime types by victm count
 
-stri_split_lines(fbi[[19]])[[1]][10:26] |> 
-  stri_trim_both() |> 
-  stri_match_all_regex("([[:alpha:]][^[:space:]]+)[[:space:]]+([[:digit:],]+)") |> 
+stri_split_lines(fbi[[19]])[[1]][10:26] %>% 
+  stri_trim_both() %>% 
+  stri_match_all_regex("([[:alpha:]][^[:space:]]+)[[:space:]]+([[:digit:],]+)") %>% 
   map_df(~{
     res <- .x[,2:3]
     if (!inherits(res, "character")) {
@@ -106,15 +106,15 @@ stri_split_lines(fbi[[19]])[[1]][10:26] |>
         V2 = res[2]
       ) 
     }
-  }) |> 
-  set_names("crime_type", "victim_count") |> 
+  }) %>% 
+  set_names("crime_type", "victim_count") %>% 
   type_convert(
     col_types = cols(
       crime_type = col_character(),
       victim_count = col_number()
     )
-  ) |> 
-  arrange(desc(victim_count)) |> 
+  ) %>% 
+  arrange(desc(victim_count)) %>% 
   mutate(
     crime_type = factor(crime_type, unique(crime_type))
   ) -> pg19_2020_crime_types_by_victim_count
@@ -123,9 +123,9 @@ gt::gt(pg19_2020_crime_types_by_victim_count)
 
 #' ### page 20 — 2020 crime types by victim loss
 
-stri_split_lines(fbi[[20]])[[1]][9:26] |> 
-  stri_trim_both() |> 
-  stri_replace_all_fixed("**", "") |> 
+stri_split_lines(fbi[[20]])[[1]][9:26] %>% 
+  stri_trim_both() %>% 
+  stri_replace_all_fixed("**", "") %>% 
   stri_match_first_regex(
     "
 ^([^\\$]+)\\$   # from start of line, capture all non $ characters, then ignore the $
@@ -140,17 +140,17 @@ stri_split_lines(fbi[[20]])[[1]][9:26] |>
     comments = TRUE
   ) -> cols
 
-rbind(cols[,2:3], cols[,4:5], cols[,6:7]) |> 
-  as.data.frame() |> 
-  set_names(c("crime_type", "loss")) |> 
-  filter(!is.na(crime_type)) |> 
-  mutate_all(stri_trim_both) |> 
+rbind(cols[,2:3], cols[,4:5], cols[,6:7]) %>% 
+  as.data.frame() %>% 
+  set_names(c("crime_type", "loss")) %>% 
+  filter(!is.na(crime_type)) %>% 
+  mutate_all(stri_trim_both) %>% 
   type_convert(
     col_types = cols(
       crime_type = col_character(),
       loss = col_number()
     )
-  ) |> 
+  ) %>% 
   mutate(
     crime_type = fct_reorder(crime_type, loss, identity)
   ) -> pg20_2020_crime_types_by_victim_loss
@@ -189,20 +189,20 @@ gt::gt(pg20_2020_crime_types_by_victim_loss)
 
 #' ### page 21 — last 3 year complaint count comparison
 
-stri_trim_both(stri_split_lines(fbi[[21]])[[1]][9:40]) |> 
+stri_trim_both(stri_split_lines(fbi[[21]])[[1]][9:40]) %>% 
   stri_match_first_regex(
     "^([^\\d]+)([\\d,]+)\\s+([\\d,]+)\\s+(.*)"
   ) -> pg21_last_3_year_complaint_counts
 
-pg21_last_3_year_complaint_counts[,2:5] |> 
-  as.data.frame() |> 
-  set_names(c("crime_type", "2020", "2019", "2018")) |> 
-  mutate_all(stri_trim_both) |> 
-  type_convert() |> 
-  gather(year, victim_count, -crime_type) |> 
-  mutate(year = as.integer(year)) |> 
+pg21_last_3_year_complaint_counts[,2:5] %>% 
+  as.data.frame() %>% 
+  set_names(c("crime_type", "2020", "2019", "2018")) %>% 
+  mutate_all(stri_trim_both) %>% 
+  type_convert() %>% 
+  gather(year, victim_count, -crime_type) %>% 
+  mutate(year = as.integer(year)) %>% 
   mutate(
-    crime_type = fct_reorder(crime_type, victim_count, sum) |> fct_rev()
+    crime_type = fct_reorder(crime_type, victim_count, sum) %>% fct_rev()
   ) -> pg21_last_3_year_complaint_counts
 
 gt::gt(pg21_last_3_year_complaint_counts)
@@ -238,21 +238,21 @@ gt::gt(pg21_last_3_year_complaint_counts)
 
 #' ### page 22 — last 3 year complaint loss by crime type
 
-stri_trim_both(stri_split_lines(fbi[[22]])[[1]][8:40]) |> 
+stri_trim_both(stri_split_lines(fbi[[22]])[[1]][8:40]) %>% 
   stri_match_first_regex(
     "^([^\\$]+)\\$([^[:space:]]+)[[:space:]]+([^\\$]+)\\$([^[:space:]]+)[[:space:]]+\\$(.*)"
   ) -> pg22_last_3_year_complaint_counts_loss
 
-pg22_last_3_year_complaint_counts_loss[,2:6] |> 
-  as.data.frame() |> 
-  set_names(c("crime_type", "2020", "rm", "2019", "2018")) |> 
-  mutate_all(stri_trim_both) |> 
-  select(-rm) |> 
-  type_convert() |> 
-  gather(year, loss, -crime_type) |> 
-  mutate(year = as.integer(year)) |> 
+pg22_last_3_year_complaint_counts_loss[,2:6] %>% 
+  as.data.frame() %>% 
+  set_names(c("crime_type", "2020", "rm", "2019", "2018")) %>% 
+  mutate_all(stri_trim_both) %>% 
+  select(-rm) %>% 
+  type_convert() %>% 
+  gather(year, loss, -crime_type) %>% 
+  mutate(year = as.integer(year)) %>% 
   mutate(
-    crime_type = fct_reorder(crime_type, loss, sum) |> fct_rev()
+    crime_type = fct_reorder(crime_type, loss, sum) %>% fct_rev()
   ) -> pg22_last_3_year_complaint_counts_loss
 
 gt::gt(pg22_last_3_year_complaint_counts_loss)
@@ -279,17 +279,17 @@ gt::gt(pg22_last_3_year_complaint_counts_loss)
 
 # state metadata
 
-read_html("https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population") |> 
-  html_table() |> 
-  magrittr::extract2(1) |> 
-  as_tibble() |> 
-  select(state = 3, population = 4) |> 
+read_html("https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population") %>% 
+  html_table() %>% 
+  magrittr::extract2(1) %>% 
+  as_tibble() %>% 
+  select(state = 3, population = 4) %>% 
   type_convert(
     col_types = cols(
       state = col_character(),
       population = col_number()
     )
-  ) |> 
+  ) %>% 
   add_row(
     state = "U.S. Minor Outlying Islands",
     population = 360 # ESTIMATE
@@ -297,10 +297,10 @@ read_html("https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population")
 
 #' ### page 23 — state statistics victim counts
 
-stri_trim_both(stri_split_lines(fbi[[23]])[[1]][10:38]) |> 
+stri_trim_both(stri_split_lines(fbi[[23]])[[1]][10:38]) %>% 
   stri_match_all_regex(
     "([[:digit:]]{1,2})[[:space:]]+([^[:digit:]]+)([[:digit:],]+)"
-  ) |> 
+  ) %>% 
   map_df(~{
     res <- .x[,3:4]
     if (!inherits(res, "character")) {
@@ -311,16 +311,16 @@ stri_trim_both(stri_split_lines(fbi[[23]])[[1]][10:38]) |>
         V2 = res[2]
       ) 
     }
-  }) |> 
-  mutate_all(stri_trim_both) |>
-  set_names("state", "victim_count") |> 
+  }) %>% 
+  mutate_all(stri_trim_both) %>%
+  set_names("state", "victim_count") %>% 
   type_convert(
     col_types = cols(
       state = col_character(),
       victim_count = col_number()
     )
-  ) |> 
-  # arrange(desc(victim_count)) |> 
+  ) %>% 
+  # arrange(desc(victim_count)) %>% 
   mutate(
     state = case_when(
       state == "Virgin Islands, U.S." ~ "U.S. Virgin Islands",
@@ -329,8 +329,8 @@ stri_trim_both(stri_split_lines(fbi[[23]])[[1]][10:38]) |>
     state = factor(state, state)
   ) -> pg23_2020_overall_state_victim_count
 
-pg23_2020_overall_state_victim_count |> 
-  left_join(state_pop) |> 
+pg23_2020_overall_state_victim_count %>% 
+  left_join(state_pop) %>% 
   mutate(
     per_cap = (victim_count / population) * 100000
   ) -> pg23_2020_overall_state_victim_count
@@ -339,10 +339,10 @@ gt::gt(pg23_2020_overall_state_victim_count)
 
 # page 24 — state statistics losses
 
-stri_trim_both(stri_split_lines(fbi[[24]])[[1]][9:37]) |> 
+stri_trim_both(stri_split_lines(fbi[[24]])[[1]][9:37]) %>% 
   stri_match_all_regex(
     "([[:digit:]]{1,2})[[:space:]]+([^\\$]+)\\$([[:digit:],]+)"
-  ) |> 
+  ) %>% 
   map_df(~{
     res <- .x[,3:4]
     if (!inherits(res, "character")) {
@@ -353,15 +353,15 @@ stri_trim_both(stri_split_lines(fbi[[24]])[[1]][9:37]) |>
         V2 = res[2]
       ) 
     }
-  }) |> 
-  mutate_all(stri_trim_both) |>
-  set_names("state", "loss") |> 
+  }) %>% 
+  mutate_all(stri_trim_both) %>%
+  set_names("state", "loss") %>% 
   type_convert(
     col_types = cols(
       state = col_character(),
       loss = col_number()
     )
-  ) |> 
+  ) %>% 
   mutate(
     state = case_when(
       state == "Virgin Islands, U.S." ~ "U.S. Virgin Islands",
@@ -370,8 +370,8 @@ stri_trim_both(stri_split_lines(fbi[[24]])[[1]][9:37]) |>
     state = factor(state, state)
   ) -> pg24_2020_overall_state_losses
 
-pg24_2020_overall_state_losses |> 
-  left_join(state_pop) |> 
+pg24_2020_overall_state_losses %>% 
+  left_join(state_pop) %>% 
   mutate(
     per_cap = (loss / population) * 100000
   ) -> pg24_2020_overall_state_losses
@@ -380,10 +380,10 @@ gt::gt(pg24_2020_overall_state_losses)
 
 #' ### page 25 — count by subject per state
 
-stri_trim_both(stri_split_lines(fbi[[25]])[[1]][9:37]) |> 
+stri_trim_both(stri_split_lines(fbi[[25]])[[1]][9:37]) %>% 
   stri_match_all_regex(
     "([[:digit:]]{1,2})[[:space:]]+([^[:digit:]]+)([[:digit:],]+)"
-  ) |> 
+  ) %>% 
   map_df(~{
     res <- .x[,3:4]
     if (!inherits(res, "character")) {
@@ -394,15 +394,15 @@ stri_trim_both(stri_split_lines(fbi[[25]])[[1]][9:37]) |>
         V2 = res[2]
       ) 
     }
-  }) |> 
-  mutate_all(stri_trim_both) |>
-  set_names("state", "subjects") |> 
+  }) %>% 
+  mutate_all(stri_trim_both) %>%
+  set_names("state", "subjects") %>% 
   type_convert(
     col_types = cols(
       state = col_character(),
       subjects = col_number()
     )
-  ) |> 
+  ) %>% 
   mutate(
     state = case_when(
       state == "Virgin Islands, U.S." ~ "U.S. Virgin Islands",
@@ -411,8 +411,8 @@ stri_trim_both(stri_split_lines(fbi[[25]])[[1]][9:37]) |>
     state = factor(state, state)
   ) -> pg25_2020_overall_state_subjects
 
-pg25_2020_overall_state_subjects |> 
-  left_join(state_pop) |> 
+pg25_2020_overall_state_subjects %>% 
+  left_join(state_pop) %>% 
   mutate(
     per_cap = (subjects / population) * 100000
   ) -> pg25_2020_overall_state_subjects
@@ -421,10 +421,10 @@ gt::gt(pg25_2020_overall_state_subjects)
 
 #' ### page 26 — subject earnings per destination state
 
-stri_trim_both(stri_split_lines(fbi[[26]])[[1]][9:37]) |> 
+stri_trim_both(stri_split_lines(fbi[[26]])[[1]][9:37]) %>% 
   stri_match_all_regex(
     "([[:digit:]]{1,2})[[:space:]]+([^\\$]+)\\$([[:digit:],]+)"
-  ) |> 
+  ) %>% 
   map_df(~{
     res <- .x[,3:4]
     if (!inherits(res, "character")) {
@@ -435,15 +435,15 @@ stri_trim_both(stri_split_lines(fbi[[26]])[[1]][9:37]) |>
         V2 = res[2]
       ) 
     }
-  }) |> 
-  mutate_all(stri_trim_both) |>
-  set_names("state", "loss") |> 
+  }) %>% 
+  mutate_all(stri_trim_both) %>%
+  set_names("state", "loss") %>% 
   type_convert(
     col_types = cols(
       state = col_character(),
       loss = col_number()
     )
-  ) |> 
+  ) %>% 
   mutate(
     state = case_when(
       state == "Virgin Islands, U.S." ~ "U.S. Virgin Islands",
@@ -452,8 +452,8 @@ stri_trim_both(stri_split_lines(fbi[[26]])[[1]][9:37]) |>
     state = factor(state, state)
   ) -> pg26_2020_overall_state_earnings_per_subject
 
-pg26_2020_overall_state_earnings_per_subject |> 
-  left_join(state_pop) |> 
+pg26_2020_overall_state_earnings_per_subject %>% 
+  left_join(state_pop) %>% 
   mutate(
     per_cap = (loss / population) * 100000
   ) -> pg26_2020_overall_state_earnings_per_subject
@@ -462,7 +462,7 @@ gt::gt(pg26_2020_overall_state_earnings_per_subject)
 
 ##
 
-ls(pattern = "^p.*") |> 
+ls(pattern = "^p.*") %>% 
   walk(~{
     
     base <- gsub("_", "-", .x)
