@@ -1,17 +1,3 @@
----
-title: ""
-author: ""
-date: ""
-output:
-  html_document:
-    toc: true
-    keep_md: true
-    theme: simplex
-    highlight: monochrome
----
-
-
-
 # 2020 FBI IC3 Data Extraction script
 
 Extracts tables from the 2020 FBI IC3 report (in `src/`).
